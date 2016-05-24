@@ -5,6 +5,7 @@ Created on 2016 máj. 19
 '''
 from hu.farago.eum2.reader.PlayerCSVReader import PlayerCSVReader
 from hu.farago.eum2.calculator.MedianVoterPositionCalculator import MedianVoterPositionCalculator
+from hu.farago.eum2.calculator.ExpectedUtilityCalculator import ExpectedUtilityCalculator
 
 if __name__ == '__main__':
     
@@ -19,4 +20,5 @@ if __name__ == '__main__':
     medianVoter = medianVPC.getMedianVoterPosition()
     maxDifference = medianVPC.getPositionMaxDifference()
     
-    
+    expectedCalc = ExpectedUtilityCalculator(players, medianVoter, maxDifference)
+    expectedCalc.calculateExpectedUtility()

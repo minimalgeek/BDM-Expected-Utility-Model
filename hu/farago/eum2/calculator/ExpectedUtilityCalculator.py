@@ -6,35 +6,26 @@ Created on 2016 máj. 23
 
 from typing import Iterable
 from hu.farago.eum2.dto.Player import Player
+from hu.farago.eum2.calculator.ProbabilityOfSuccessCalculator import ProbabilityOfSuccessCalculator
+from hu.farago.eum2.calculator.ProbabilityOfStatusQuoCalculator import ProbabilityOfStatusQuoCalculator
 
 class ExpectedUtilityCalculator():
 
     __players = []
+    __medianVoter = None
+    __maxDifferenceBetweenPositions = 0
 
-    def __init__(self, players:Iterable[Player]):
+    def __init__(self, players:Iterable[Player], medianVoter:Player, maxDifferenceBetweenPositions):
         self.__players = players
+        self.__medianVoter = medianVoter
+        self.__maxDifferenceBetweenPositions = maxDifferenceBetweenPositions
         
 
-    def calculateExpectedUtility(self, playerI):
-        probabilityOfSuccess = self.calculateAllianceProbability(playerI)
+    def calculateExpectedUtility(self):
+        probSuccCalc = ProbabilityOfSuccessCalculator(self.__players)
+        probabilityOfSuccess = probSuccCalc.calculate()
+        probSQCalc = ProbabilityOfStatusQuoCalculator(self.__players, probabilityOfSuccess)
+        probabilityOfStatusQuo = probSQCalc.calculate()
         
-    def calculateAllianceProbability(self, playerI):
-        length = len(self.__players)
-        probabilityOfSuccess = [[0 for x in range(length)] for y in range(length)]
-        
-        for i, playerI in enumerate(self.__players):
-            for j, playerJ in enumerate(self.__players):
-                numerator = 0
-                denominator = 0
-                for k, playerK in enumerate(self.__players):
-                    arg = self.calculateAllianceProbabilityArg(playerI, playerJ, playerK)
-                    if (arg > 0):
-                        numerator += arg
-                    denominator += arg
-                
-                probabilityOfSuccess[i][j] = numerator / denominator
-                
-        return probabilityOfSuccess
-                                    
-    def calculateAllianceProbabilityArg(self, voteI: Player, voteJ: Player, voteK: Player):
-        return voteK.power()*(abs(voteK.position - voteJ.position) - abs(voteK.position - voteI.position))
+        print(probabilityOfStatusQuo)
+    
