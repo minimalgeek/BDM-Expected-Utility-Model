@@ -53,14 +53,12 @@ class MedianVoterCalculator():
         
         actor_before_midpoint = None
         actor_after_midpoint = None
-        power_after_midpoint = 0
         for actor in unique_power_distributions:
             if actor.get_cumulative_power() < distribution_midpoint:
                 actor_before_midpoint = actor
             if actor.get_cumulative_power() > distribution_midpoint:
                 if first_position_after_midpoint.get_position() == actor.get_position():
                     actor_after_midpoint = actor
-                    power_after_midpoint += actor.get_power()
                   
         weighted_median_position = 0
         if actor_before_midpoint == None:

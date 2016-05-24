@@ -1,0 +1,34 @@
+'''
+Created on 2016 máj. 19
+
+@author: Balázs
+'''
+
+class Player():
+    '''
+    Player of EUM
+    '''
+    
+    name = None
+    capability = None
+    position = None
+    salience = None
+    
+    sumOfVotes = 0
+
+    def __init__(self, name, capability, position, salience):
+        self.name = name
+        self.capability = float(capability)
+        self.position = float(position)
+        self.salience = float(salience)
+        
+    def power(self):
+        return self.capability*self.salience
+    
+    def addToSum(self, value):
+        self.sumOfVotes += value
+    
+    def __str__(self):
+        return ','.join([self.name, str(self.capability), str(self.position), str(self.salience)])
+    def __repr__(self):
+        return self.__str__()
