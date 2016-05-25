@@ -8,6 +8,7 @@ from typing import Iterable
 from hu.farago.eum2.dto.Player import Player
 from hu.farago.eum2.calculator.ProbabilityOfSuccessCalculator import ProbabilityOfSuccessCalculator
 from hu.farago.eum2.calculator.ProbabilityOfStatusQuoCalculator import ProbabilityOfStatusQuoCalculator
+from hu.farago.eum2.calculator.Utility import *
 
 class ExpectedUtilityCalculator():
 
@@ -27,5 +28,30 @@ class ExpectedUtilityCalculator():
         probSQCalc = ProbabilityOfStatusQuoCalculator(self.__players, probabilityOfSuccess)
         probabilityOfStatusQuo = probSQCalc.calculate()
         
-        print(probabilityOfStatusQuo)
-    
+        length = len(self.__players)
+        expectedUtility = [[0 for x in range(length)] for y in range(length)]
+        
+        for i, playerI in enumerate(self.__players):
+            for j, playerJ in enumerate(self.__players):
+                probSucc = probabilityOfSuccess[i][j]
+                probSQ = probabilityOfStatusQuo[i][j]
+                usi = USI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
+                ufi = UFI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
+                ubi = UBI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
+                uwi = UWI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
+                usq = USQ(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
+                
+                T = 1
+                if playerI.previousPosition != None:
+                    prevDistance = abs(playerI.previousPosition - playerJ.previousPosition)
+                    currentDistance = abs(playerI.position - playerJ.position)
+                    if prevDistance > currentDistance:
+                        T = 1
+                    else:
+                        T = 0
+                
+                expectedUtility[i][j] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
+                                        (1 - playerJ.salience)*usi - probSQ*usq - \
+                                        (1 - probSQ)*(T*ubi + (1 - T)*uwi)
+        
+        return expectedUtility

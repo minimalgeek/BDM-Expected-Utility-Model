@@ -47,12 +47,12 @@ class UFI(Utility):
 class UBI(Utility):
     
     def calculate(self):
-        return 2 - 4*((0.5 - 0.25*(self.player_I_Median_Difference()*self.player_I_J_Difference()/self.__maxDifferenceBetweenPositions))**self.__riskIJ)
+        return 2 - 4*((0.5 - 0.25*((self.player_I_Median_Difference() + self.player_I_J_Difference())/self.__maxDifferenceBetweenPositions))**self.__riskIJ)
                 
 class UWI(Utility):
     
     def calculate(self):
-        return 2 - 4*((0.5 + 0.25*(self.player_I_Median_Difference()*self.player_I_J_Difference()/self.__maxDifferenceBetweenPositions))**self.__riskIJ)
+        return 2 - 4*((0.5 + 0.25*((self.player_I_Median_Difference() + self.player_I_J_Difference())/self.__maxDifferenceBetweenPositions))**self.__riskIJ)
     
 class USQ(Utility):
     

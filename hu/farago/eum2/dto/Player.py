@@ -8,6 +8,7 @@ class Player():
     '''
     Player of EUM
     '''
+    previousPosition = None
     
     name = None
     capability = None

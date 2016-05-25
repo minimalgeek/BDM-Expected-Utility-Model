@@ -14,11 +14,15 @@ if __name__ == '__main__':
     
     print(players)
     
+    anyPossibleOffer = True
     medianVPC = MedianVoterPositionCalculator(players)
-    medianVPC.calculateMedianVoterPosition()
     
-    medianVoter = medianVPC.getMedianVoterPosition()
-    maxDifference = medianVPC.getPositionMaxDifference()
-    
-    expectedCalc = ExpectedUtilityCalculator(players, medianVoter, maxDifference)
-    expectedCalc.calculateExpectedUtility()
+    while anyPossibleOffer:
+        medianVPC.calculateMedianVoterPosition()
+        medianVoter = medianVPC.getMedianVoterPosition()
+        maxDifference = medianVPC.getPositionMaxDifference()
+        
+        expectedCalc = ExpectedUtilityCalculator(players, medianVoter, maxDifference)
+        expectedCalc.calculateExpectedUtility()
+        
+        
