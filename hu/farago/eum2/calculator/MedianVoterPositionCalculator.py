@@ -34,6 +34,9 @@ class MedianVoterPositionCalculator():
         self.__positionMax = max(self.__players, key=playerPos).position
         self.__positionMaxDifference = abs(self.__positionMax - self.__positionMin)
         
+        if self.__positionMaxDifference == 0:
+            return
+        
         length = len(self.__players)
         votesForJVersusK = [[0 for x in range(length)] for y in range(length)]
         

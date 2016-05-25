@@ -35,6 +35,7 @@ class ExpectedUtilityCalculator():
             for j, playerJ in enumerate(self.__players):
                 probSucc = probabilityOfSuccess[i][j]
                 probSQ = probabilityOfStatusQuo[i][j]
+                
                 usi = USI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
                 ufi = UFI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
                 ubi = UBI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()

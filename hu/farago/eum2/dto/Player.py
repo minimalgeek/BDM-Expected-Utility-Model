@@ -28,6 +28,10 @@ class Player():
     
     def addToSum(self, value):
         self.sumOfVotes += value
+        
+    def updatePosition(self, value):
+        self.previousPosition = self.position
+        self.position = value
     
     def __str__(self):
         return ','.join([self.name, str(self.capability), str(self.position), str(self.salience)])

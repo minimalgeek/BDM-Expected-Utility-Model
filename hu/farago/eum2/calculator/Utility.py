@@ -10,18 +10,18 @@ class Utility(object):
 
     __metaclass__ = abc.ABCMeta
 
-    __medianVoter = None
-    __playerI = None
-    __playerJ = None
-    __maxDifferenceBetweenPositions = 0
-    __riskIJ = 0
+    _medianVoter = None
+    _playerI = None
+    _playerJ = None
+    _maxDifferenceBetweenPositions = 0
+    _riskIJ = 0
 
     def __init__(self, medianVoter, playerI, playerJ, maxDifferenceBetweenPositions, riskIJ = 1):
-        self.__medianVoter = medianVoter
-        self.__playerI = playerI
-        self.__playerJ = playerJ
-        self.__maxDifferenceBetweenPositions = maxDifferenceBetweenPositions
-        self.__riskIJ = riskIJ    
+        self._medianVoter = medianVoter
+        self._playerI = playerI
+        self._playerJ = playerJ
+        self._maxDifferenceBetweenPositions = maxDifferenceBetweenPositions
+        self._riskIJ = riskIJ    
 
     @abc.abstractmethod
     def calculate(self):
@@ -29,32 +29,32 @@ class Utility(object):
         return
     
     def player_I_J_Difference(self):
-        return abs(self.__playerI.position - self.__playerJ.position)
+        return abs(self._playerI.position - self._playerJ.position)
     
     def player_I_Median_Difference(self):
-        return abs(self.__playerI.position - self.__medianVoter.position)
+        return abs(self._playerI.position - self._medianVoter.position)
 
 class USI(Utility):
     
     def calculate(self):
-        return 2 - 4*((0.5 - 0.5*(self.player_I_J_Difference()/self.__maxDifferenceBetweenPositions))**self.__riskIJ)
+        return 2 - 4*((0.5 - 0.5*(self.player_I_J_Difference()/self._maxDifferenceBetweenPositions))**self._riskIJ)
 
 class UFI(Utility):
     
     def calculate(self):
-        return 2 - 4*((0.5 + 0.5*(self.player_I_J_Difference()/self.__maxDifferenceBetweenPositions))**self.__riskIJ)
+        return 2 - 4*((0.5 + 0.5*(self.player_I_J_Difference()/self._maxDifferenceBetweenPositions))**self._riskIJ)
     
 class UBI(Utility):
     
     def calculate(self):
-        return 2 - 4*((0.5 - 0.25*((self.player_I_Median_Difference() + self.player_I_J_Difference())/self.__maxDifferenceBetweenPositions))**self.__riskIJ)
+        return 2 - 4*((0.5 - 0.25*((self.player_I_Median_Difference() + self.player_I_J_Difference())/self._maxDifferenceBetweenPositions))**self._riskIJ)
                 
 class UWI(Utility):
     
     def calculate(self):
-        return 2 - 4*((0.5 + 0.25*((self.player_I_Median_Difference() + self.player_I_J_Difference())/self.__maxDifferenceBetweenPositions))**self.__riskIJ)
+        return 2 - 4*((0.5 + 0.25*((self.player_I_Median_Difference() + self.player_I_J_Difference())/self._maxDifferenceBetweenPositions))**self._riskIJ)
     
 class USQ(Utility):
     
     def calculate(self):
-        return 2 - 4*(0.5**self.__riskIJ)
+        return 2 - 4*(0.5**self._riskIJ)
