@@ -15,11 +15,13 @@ class ExpectedUtilityCalculator():
     __players = []
     __medianVoter = None
     __maxDifferenceBetweenPositions = 0
+    __risks = []
 
-    def __init__(self, players:Iterable[Player], medianVoter:Player, maxDifferenceBetweenPositions):
+    def __init__(self, players:Iterable[Player], medianVoter:Player, maxDifferenceBetweenPositions, risks):
         self.__players = players
         self.__medianVoter = medianVoter
         self.__maxDifferenceBetweenPositions = maxDifferenceBetweenPositions
+        self.__risks = risks
         
 
     def calculateExpectedUtility(self):
@@ -36,11 +38,11 @@ class ExpectedUtilityCalculator():
                 probSucc = probabilityOfSuccess[i][j]
                 probSQ = probabilityOfStatusQuo[i][j]
                 
-                usi = USI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
-                ufi = UFI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
-                ubi = UBI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
-                uwi = UWI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
-                usq = USQ(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions).calculate()
+                usi = USI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
+                ufi = UFI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
+                ubi = UBI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
+                uwi = UWI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
+                usq = USQ(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
                 
                 T = 1
                 if playerI.previousPosition != None:
