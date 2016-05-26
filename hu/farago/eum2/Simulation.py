@@ -37,3 +37,4 @@ if __name__ == '__main__':
         offerMaker.makeOffers()
         
         print(players)
+        print("Median Voter:", medianVoter)

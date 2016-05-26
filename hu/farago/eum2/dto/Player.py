@@ -8,6 +8,7 @@ class Player():
     '''
     Player of EUM
     '''
+    preferredPosition = None
     previousPosition = None
     
     name = None
@@ -22,6 +23,8 @@ class Player():
         self.capability = float(capability)
         self.position = float(position)
         self.salience = float(salience)
+        
+        self.preferredPosition = self.position
         
     def power(self):
         return self.capability*self.salience

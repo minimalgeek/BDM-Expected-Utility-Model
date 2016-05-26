@@ -22,14 +22,13 @@ class OfferMaker(object):
                     Ei = self.__expectedUtility[i][j]
                     Ej = self.__expectedUtility[j][i]
                     # conflict
-                    if Ei > 0 and Ej > 0:
-                        if Ej > Ei:
-                            offers.append(playerJ.position)
-                        else:
-                            offers.append(playerI.position)
+                    if Ei > 0 and Ej > 0 and Ej > Ei:
+                        offers.append(playerJ.position)
+                    elif Ei > 0 and Ej > 0 and Ej < Ei:
+                        offers.append(playerI.position)
                     # compromise - i upper hand
                     elif Ei > 0 and Ej < 0 and abs(Ei) > abs(Ej):
-                        #newPos = (playerI.position - playerJ.position)*abs(Ej/Ei)
+                        newPos = (playerI.position - playerJ.position)*abs(Ej/Ei)
                         offers.append(playerI.position)
                     # compromise - j upper hand
                     elif Ei < 0 and Ej > 0 and abs(Ej) > abs(Ei):
@@ -44,6 +43,6 @@ class OfferMaker(object):
                     # stalemate
                     elif Ei < 0 and Ej < 0:
                         offers.append(playerI.position)
-            
-            minDistancePosition = min(offers, key = lambda x : abs(x - playerI.position))
+                    
+            minDistancePosition = min(offers, key = lambda x : abs(x - playerI.preferredPosition))
             playerI.updatePosition(minDistancePosition)
