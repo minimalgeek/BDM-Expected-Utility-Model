@@ -22,6 +22,7 @@ class Player():
         self.name = name
         self.capability = float(capability)
         self.position = float(position)
+        self.previousPosition = float(position)
         self.salience = float(salience)
         
         self.preferredPosition = self.position
@@ -37,6 +38,6 @@ class Player():
         self.position = value
     
     def __str__(self):
-        return ','.join([self.name, str(self.capability), str(self.position), str(self.salience)])
+        return ','.join([self.name, str(self.capability), str(round(self.position, 3)), str(self.salience)])
     def __repr__(self):
         return self.__str__()

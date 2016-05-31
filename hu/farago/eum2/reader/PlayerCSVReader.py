@@ -12,7 +12,8 @@ class PlayerCSVReader():
     '''
     classdocs
     '''
-    __defaultFileName = 'oil_price.csv'
+    #__defaultFileName = 'oil_price.csv'
+    __defaultFileName = 'countries.csv'
 
     def __init__(self):
         '''

@@ -45,13 +45,13 @@ class ExpectedUtilityCalculator():
                 usq = USQ(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
                 
                 T = 1
-                if playerI.previousPosition != None:
-                    prevDistance = abs(playerI.previousPosition - playerJ.previousPosition)
-                    currentDistance = abs(playerI.position - playerJ.position)
-                    if prevDistance > currentDistance:
-                        T = 1
-                    else:
-                        T = 0
+
+                prevDistance = abs(playerI.previousPosition - playerJ.previousPosition)
+                currentDistance = abs(playerI.position - playerJ.position)
+                if prevDistance >= currentDistance:
+                    T = 1
+                else:
+                    T = 0
                 
                 expectedUtility[i][j] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
                                         (1 - playerJ.salience)*usi - probSQ*usq - \
