@@ -44,12 +44,12 @@ if __name__ == '__main__':
             break
         
         expectedCalc = ExpectedUtilityCalculator(players, medianVoter, maxDifference, risks)
-        expUt = expectedCalc.calculateExpectedUtility()
+        expectedCalc.calculateExpectedUtility()
         
-        riskCalc = RiskCalculator(players, expUt)
+        riskCalc = RiskCalculator(players, expectedCalc.get_expected_utility_ij())
         risks = riskCalc.calculate()
         
-        offerMaker = OfferMaker(players, expUt)
+        offerMaker = OfferMaker(players, expectedCalc)
         offerMaker.makeOffers()
         
         for i, p in enumerate(players):

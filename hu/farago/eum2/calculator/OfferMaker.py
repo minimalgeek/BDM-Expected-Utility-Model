@@ -7,11 +7,11 @@ Created on 2016 máj. 25
 class OfferMaker(object):
 
     __players = None
-    __expectedUtility = None
+    __expectedUtilityCalculator = None
 
-    def __init__(self, players, expectedUtility):
+    def __init__(self, players, expectedUtilityCalculator):
         self.__players = players
-        self.__expectedUtility = expectedUtility
+        self.__expectedUtilityCalculator = expectedUtilityCalculator
         
     def makeOffers(self):
         
@@ -21,8 +21,8 @@ class OfferMaker(object):
             # calculate where i get offers from
             for j, playerJ in enumerate(self.__players):
                 if i != j:
-                    Ei = self.__expectedUtility[i][j]
-                    Ej = self.__expectedUtility[j][i]
+                    Ei = self.__expectedUtilityCalculator.get_expected_utility_ij()[i][j]
+                    Ej = self.__expectedUtilityCalculator.get_expected_utility_ji()[i][j]
                     # conflict
                     if Ei > 0 and Ej > 0 and Ej > Ei:
                         offers.append({"force": Ei, "position": playerJ.position})
