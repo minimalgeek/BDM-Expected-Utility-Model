@@ -29,7 +29,7 @@ class OfferMaker(object):
                     # compromise
                     elif Ei < 0 and Ej > 0 and abs(Ei) < abs(Ej):
                         newPos = (playerI.position - playerJ.position)*abs(Ei/Ej)
-                        offers.append({"force": Ei, "position": playerI.position + newPos})
+                        offers.append({"force": Ei, "position": playerI.position - newPos})
                     # capitulate
                     elif Ei < 0 and Ej > 0 and abs(Ei) > abs(Ej):
                         offers.append({"force": Ei, "position": playerJ.position})

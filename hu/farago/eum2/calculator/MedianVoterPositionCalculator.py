@@ -6,6 +6,7 @@ Created on 2016 máj. 19
 
 from typing import Iterable
 from hu.farago.eum2.dto.Player import Player
+from hu.farago.eum2.calculator.Helper import tablePrint
 
 class MedianVoterPositionCalculator():
 
@@ -29,7 +30,7 @@ class MedianVoterPositionCalculator():
         def playerPos(p):
             return p.position
         
-        self.__players.sort(key=playerPos)
+        # self.__players.sort(key=playerPos)
         self.__positionMin = min(self.__players, key=playerPos).position
         self.__positionMax = max(self.__players, key=playerPos).position
         self.__positionMaxDifference = abs(self.__positionMax - self.__positionMin)
@@ -47,8 +48,10 @@ class MedianVoterPositionCalculator():
                     if playerI != playerJ and playerI != playerK:
                         sumOfVotes += self.voteBetweenPlayers(playerI, playerJ, playerK)
                 
-                votesForJVersusK[j][k] = sumOfVotes
+                votesForJVersusK[j][k] = round(sumOfVotes, 3)
                 playerJ.addToSum(sumOfVotes)
+                
+        tablePrint(votesForJVersusK)
         
         self.__medianVoterPosition = max(self.__players, key=lambda x: x.sumOfVotes)
         
