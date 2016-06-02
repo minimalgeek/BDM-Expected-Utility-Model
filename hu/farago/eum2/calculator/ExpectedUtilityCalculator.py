@@ -9,6 +9,7 @@ from hu.farago.eum2.dto.Player import Player
 from hu.farago.eum2.calculator.ProbabilityOfSuccessCalculator import ProbabilityOfSuccessCalculator
 from hu.farago.eum2.calculator.ProbabilityOfStatusQuoCalculator import ProbabilityOfStatusQuoCalculator
 from hu.farago.eum2.calculator.Utility import *
+from hu.farago.eum2.calculator.Helper import tablePrint
 
 class ExpectedUtilityCalculator():
 
@@ -36,7 +37,7 @@ class ExpectedUtilityCalculator():
         for i, playerI in enumerate(self.__players):
             for j, playerJ in enumerate(self.__players):
                 probSucc = probabilityOfSuccess[i][j]
-                probSQ = probabilityOfStatusQuo[i][j]
+                probSQ = 1 #probabilityOfStatusQuo[i][j]
                 
                 usi = USI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
                 ufi = UFI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
@@ -57,4 +58,6 @@ class ExpectedUtilityCalculator():
                                         (1 - playerJ.salience)*usi - probSQ*usq - \
                                         (1 - probSQ)*(T*ubi + (1 - T)*uwi)
         
+        print ("==== Expected Utility Matrix =====")
+        tablePrint(expectedUtility)
         return expectedUtility

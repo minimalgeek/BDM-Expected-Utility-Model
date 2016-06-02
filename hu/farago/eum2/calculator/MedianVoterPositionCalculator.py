@@ -48,7 +48,7 @@ class MedianVoterPositionCalculator():
                     if playerI != playerJ and playerI != playerK:
                         sumOfVotes += self.voteBetweenPlayers(playerI, playerJ, playerK)
                 
-                votesForJVersusK[j][k] = round(sumOfVotes, 3)
+                votesForJVersusK[j][k] = sumOfVotes
                 playerJ.addToSum(sumOfVotes)
                 
         tablePrint(votesForJVersusK)

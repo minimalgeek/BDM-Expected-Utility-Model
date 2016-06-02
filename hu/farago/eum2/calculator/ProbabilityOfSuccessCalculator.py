@@ -6,6 +6,7 @@ Created on 2016 máj. 24
 
 from typing import Iterable
 from hu.farago.eum2.dto.Player import Player
+from hu.farago.eum2.calculator.Helper import tablePrint
 
 class ProbabilityOfSuccessCalculator(object):
 
@@ -31,10 +32,13 @@ class ProbabilityOfSuccessCalculator(object):
                         denominator += abs(arg)
                     
                 if denominator != 0:
-                    probabilityOfSuccess[i][j] = numerator / denominator
+                    probabilityOfSuccess[i][j] = (numerator / denominator)
                 else:
                     # is it right?
                     probabilityOfSuccess[i][j] = 0
+                    
+        print ("====Prob of Success =====")
+        tablePrint(probabilityOfSuccess)
 
         return probabilityOfSuccess
                                     
