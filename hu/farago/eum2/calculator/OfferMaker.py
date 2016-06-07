@@ -3,41 +3,65 @@ Created on 2016 máj. 25
 
 @author: Balázs
 '''
+from collections import defaultdict
+from hu.farago.eum2.calculator.Helper import objectListPrint
 
 class OfferMaker(object):
 
     __players = None
-    __expectedUtilityCalculator = None
-
-    def __init__(self, players, expectedUtilityCalculator):
+    __expectedCalc = None
+    
+    def __init__(self, players, expectedCalc):
         self.__players = players
-        self.__expectedUtilityCalculator = expectedUtilityCalculator
+        self.__expectedCalc = expectedCalc
         
     def makeOffers(self):
         
-        offersMatrix = []
         for i, playerI in enumerate(self.__players):
-            offers = []
             # calculate where i get offers from
+            playerI.offers = []
             for j, playerJ in enumerate(self.__players):
-                if i != j:
-                    Ei = self.__expectedUtilityCalculator.get_expected_utility_ij()[i][j]
-                    Ej = self.__expectedUtilityCalculator.get_expected_utility_ji()[i][j]
-                    # conflict
-                    if Ei > 0 and Ej > 0 and Ej > Ei:
-                        offers.append({"force": Ei, "position": playerJ.position})
-                    # compromise
-                    elif Ei < 0 and Ej > 0 and abs(Ei) < abs(Ej):
-                        newPos = (playerI.position - playerJ.position)*abs(Ei/Ej)
-                        offers.append({"force": Ei, "position": playerI.position - newPos})
-                    # capitulate
-                    elif Ei < 0 and Ej > 0 and abs(Ei) > abs(Ej):
-                        offers.append({"force": Ei, "position": playerJ.position})
-            offersMatrix.append(offers)
+                if i != j and playerI.position != playerJ.position:
+                    Ei = self.__expectedCalc.get_expected_utility_ij()[j][i]
+                    Ej = self.__expectedCalc.get_expected_utility_ji()[j][i]
+
+                    if Ei > Ej > 0:
+                        midStep = (playerI.position - playerJ.position)/2
+                        playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerI.position - midStep))
+                    elif Ei > 0 and Ej < 0 and abs(Ei) > abs(Ej):
+                        xHat = (playerI.position - playerJ.position)/abs(Ei/Ej)
+                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat))
+                    elif Ei > 0 and Ej < 0 and abs(Ei) < abs(Ej):
+                        playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position))
+                        
+            print("==== Offers for %s ====" % playerI.name)
+            objectListPrint(playerI.offers)
         
-        #print("Offers matrix: ", offersMatrix) 
-        for i, offersForI in enumerate(offersMatrix):
-            if len(offersForI) > 0:
-                player = self.__players[i]
-                minDistancePosition = max(offersForI, key = lambda x : x["force"])["position"]
-                player.updatePosition(minDistancePosition)
+        for player in self.__players:
+            if len(player.offers) > 0:
+                bestOfferFunc = lambda offer : abs(offer.offered_position - player.position)
+                bestOffer = min(player.offers, key = bestOfferFunc)
+                
+                player.updatePosition(bestOffer.offered_position)
+                
+class Offer(object):
+    CONFRONTATION = 'confrontation'
+    COMPROMISE = 'compromise'
+    CAPITULATION = 'capitulation'
+    OFFER_TYPES = (
+        CONFRONTATION,
+        COMPROMISE,
+        CAPITULATION,
+    )
+
+    def __init__(self, other_actor, offer_type, offered_position):
+        if offer_type not in self.OFFER_TYPES:
+            raise ValueError('offer_type "%s" not in %s'
+                             % (offer_type, self.OFFER_TYPES))
+
+        self.other_actor = other_actor  # actor proposing the offer
+        self.offer_type = offer_type
+        self.offered_position = offered_position
+        
+    def __str__(self):
+        return ','.join([self.other_actor.name, self.offer_type, str(round(self.offered_position, 3))])

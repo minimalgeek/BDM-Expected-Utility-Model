@@ -26,16 +26,16 @@ if __name__ == '__main__':
     
     reader = PlayerCSVReader()
     players = reader.readOilPricePlayers()
+    objectListPrint(players);
     
-    objectListPrint(players)
-    
+    print("================ START ================")    
     medianVPC = MedianVoterPositionCalculator(players)
     
     risks = [1 for x in range(len(players))]
     
     data = [{"name":x.name, "values":[]} for x in players]
     i = 0
-    for i in range(20):
+    for i in range(50):
         medianVPC.calculateMedianVoterPosition()
         medianVoter = medianVPC.getMedianVoterPosition()
         print("Median Voter:", medianVoter, '\n')

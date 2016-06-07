@@ -51,7 +51,7 @@ class MedianVoterPositionCalculator():
                 votesForJVersusK[j][k] = sumOfVotes
                 playerJ.addToSum(sumOfVotes)
                 
-        tablePrint(votesForJVersusK)
+        #tablePrint(votesForJVersusK)
         
         self.__medianVoterPosition = max(self.__players, key=lambda x: x.sumOfVotes)
         

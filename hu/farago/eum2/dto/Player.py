@@ -17,6 +17,8 @@ class Player():
     salience = None
     
     sumOfVotes = 0
+    
+    offers = []
 
     def __init__(self, name, capability, position, salience):
         self.name = name

@@ -37,8 +37,8 @@ class ProbabilityOfSuccessCalculator(object):
                     # is it right?
                     probabilityOfSuccess[i][j] = 0
                     
-        print ("====Prob of Success =====")
-        tablePrint(probabilityOfSuccess)
+        #print ("====Prob of Success =====")
+        #tablePrint(probabilityOfSuccess)
 
         return probabilityOfSuccess
                                     

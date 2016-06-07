@@ -20,7 +20,7 @@ class ExpectedUtilityCalculator():
 
     __expectedUtilityIJ = []
     __expectedUtilityJI = []
-
+    
     def __init__(self, players:Iterable[Player], medianVoter:Player, maxDifferenceBetweenPositions, risks):
         self.__players = players
         self.__medianVoter = medianVoter
@@ -29,7 +29,6 @@ class ExpectedUtilityCalculator():
 
     def get_expected_utility_ij(self):
         return self.__expectedUtilityIJ
-
 
     def get_expected_utility_ji(self):
         return self.__expectedUtilityJI
@@ -68,22 +67,17 @@ class ExpectedUtilityCalculator():
                 self.__expectedUtilityIJ[i][j] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
                                         (1 - playerJ.salience)*usi - probSQ*usq - \
                                         (1 - probSQ)*(T*ubi + (1 - T)*uwi)
-                                        
-                probSucc = probabilityOfSuccess[j][i]
-                probSQ = 1 #probabilityOfStatusQuo[i][j]
                 
-                usi = USI(self.__medianVoter, playerJ, playerI, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                ufi = UFI(self.__medianVoter, playerJ, playerI, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                ubi = UBI(self.__medianVoter, playerJ, playerI, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                uwi = UWI(self.__medianVoter, playerJ, playerI, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                usq = USQ(self.__medianVoter, playerJ, playerI, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
+                probSucc = probabilityOfSuccess[j][i]
+                probSQ = 1 #probabilityOfStatusQuo[j][i]
+                
+                usi = USI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
+                ufi = UFI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
+                ubi = UBI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
+                uwi = UWI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
+                usq = USQ(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
                 
                 self.__expectedUtilityJI[i][j] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
                                         (1 - playerJ.salience)*usi - probSQ*usq - \
                                         (1 - probSQ)*(T*ubi + (1 - T)*uwi)
-        
-        print ("==== Expected Utility Matrix IJ =====")
-        tablePrint(self.__expectedUtilityIJ)
-        
-        print ("==== Expected Utility Matrix JI =====")
-        tablePrint(self.__expectedUtilityJI)
+                

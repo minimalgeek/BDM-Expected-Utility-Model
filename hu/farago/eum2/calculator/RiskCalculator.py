@@ -22,7 +22,7 @@ class RiskCalculator(object):
             euSum = 0
             for j in range(length):
                 if j != i:
-                    euSum += self.__expectedUtility[j][i]
+                    euSum += self.__expectedUtility[i][j]
             
             sums.append(euSum)
         
