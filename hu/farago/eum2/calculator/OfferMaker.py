@@ -27,7 +27,7 @@ class OfferMaker(object):
 
                     if Ei > Ej > 0:
                         midStep = (playerI.position - playerJ.position)/2
-                        playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, Ei)) # playerI.position - midStep
+                        playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerI.position - midStep, Ei)) # playerI.position - midStep
                     elif Ei > 0 and Ej < 0 and abs(Ei) > abs(Ej):
                         xHat = (playerI.position - playerJ.position)/abs(Ei/Ej)
                         playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, Ei))
