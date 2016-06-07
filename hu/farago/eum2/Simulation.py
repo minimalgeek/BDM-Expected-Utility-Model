@@ -26,14 +26,15 @@ if __name__ == '__main__':
     
     reader = PlayerCSVReader()
     players = reader.readOilPricePlayers()
-    objectListPrint(players);
+    objectListPrint(players)
     
     print("================ START ================")    
     medianVPC = MedianVoterPositionCalculator(players)
     
     risks = [1 for x in range(len(players))]
     
-    data = [{"name":x.name, "values":[]} for x in players]
+    data = [{"name":x.name, "values":[x.position]} for x in players]
+    
     i = 0
     for i in range(50):
         medianVPC.calculateMedianVoterPosition()
@@ -52,7 +53,7 @@ if __name__ == '__main__':
         offerMaker = OfferMaker(players, expectedCalc)
         offerMaker.makeOffers()
         
-        for i, p in enumerate(players):
+        for idx, p in enumerate(players):
             print(p)
             first_or_default = next((x for x in data if x["name"] == p.name), None)
             first_or_default["values"].append(p.position)

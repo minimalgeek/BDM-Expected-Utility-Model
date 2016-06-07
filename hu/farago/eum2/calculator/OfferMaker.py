@@ -27,22 +27,27 @@ class OfferMaker(object):
 
                     if Ei > Ej > 0:
                         midStep = (playerI.position - playerJ.position)/2
-                        playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerI.position - midStep))
+                        playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, Ei)) # playerI.position - midStep
                     elif Ei > 0 and Ej < 0 and abs(Ei) > abs(Ej):
                         xHat = (playerI.position - playerJ.position)/abs(Ei/Ej)
-                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat))
+                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, Ei))
                     elif Ei > 0 and Ej < 0 and abs(Ei) < abs(Ej):
-                        playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position))
+                        playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position, Ei))
                         
             print("==== Offers for %s ====" % playerI.name)
             objectListPrint(playerI.offers)
         
         for player in self.__players:
             if len(player.offers) > 0:
-                bestOfferFunc = lambda offer : abs(offer.offered_position - player.position)
-                bestOffer = min(player.offers, key = bestOfferFunc)
                 
-                player.updatePosition(bestOffer.offered_position)
+                max_util = max([offer.eu for offer in player.offers])
+                max_offers = [offer for offer in player.offers if offer.eu == max_util]
+                offer = min(max_offers, key=lambda x: abs(player.position - x.offered_position))
+                
+                #bestOfferFunc = lambda offer : abs(offer.offered_position - player.position)
+                #bestOffer = min(player.offers, key = bestOfferFunc)
+                
+                player.updatePosition(offer.offered_position)
                 
 class Offer(object):
     CONFRONTATION = 'confrontation'
@@ -54,7 +59,7 @@ class Offer(object):
         CAPITULATION,
     )
 
-    def __init__(self, other_actor, offer_type, offered_position):
+    def __init__(self, other_actor, offer_type, offered_position, eu):
         if offer_type not in self.OFFER_TYPES:
             raise ValueError('offer_type "%s" not in %s'
                              % (offer_type, self.OFFER_TYPES))
@@ -62,6 +67,7 @@ class Offer(object):
         self.other_actor = other_actor  # actor proposing the offer
         self.offer_type = offer_type
         self.offered_position = offered_position
+        self.eu = eu
         
     def __str__(self):
         return ','.join([self.other_actor.name, self.offer_type, str(round(self.offered_position, 3))])
