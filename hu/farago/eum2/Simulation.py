@@ -24,8 +24,7 @@ def createDataToPlot(data, i):
 
 if __name__ == '__main__':
     
-    reader = PlayerCSVReader()
-    players = reader.readOilPricePlayers()
+    players = PlayerCSVReader().readDefaultPlayers()
     objectListPrint(players)
     
     print("================ START ================")    
@@ -39,7 +38,7 @@ if __name__ == '__main__':
     for i in range(50):
         medianVPC.calculateMedianVoterPosition()
         medianVoter = medianVPC.getMedianVoterPosition()
-        print("Median Voter:", medianVoter, '\n')
+        print("==> Median Voter:", medianVoter, '\n')
         maxDifference = medianVPC.getPositionMaxDifference()
         if maxDifference == 0:
             break

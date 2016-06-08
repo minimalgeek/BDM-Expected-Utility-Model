@@ -63,7 +63,7 @@ class ExpectedUtilityCalculator():
                     T = 1
                 else:
                     T = 0
-                
+
                 self.__expectedUtilityIJ[i][j] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
                                         (1 - playerJ.salience)*usi - probSQ*usq - \
                                         (1 - probSQ)*(T*ubi + (1 - T)*uwi)

@@ -45,8 +45,8 @@ class MedianVoterPositionCalculator():
             for k, playerK in enumerate(self.__players):
                 sumOfVotes = 0
                 for playerI in self.__players:
-                    if playerI != playerJ and playerI != playerK:
-                        sumOfVotes += self.voteBetweenPlayers(playerI, playerJ, playerK)
+                    #if playerI != playerJ and playerI != playerK:
+                    sumOfVotes += self.voteBetweenPlayers(playerI, playerJ, playerK)
                 
                 votesForJVersusK[j][k] = sumOfVotes
                 playerJ.addToSum(sumOfVotes)
@@ -59,5 +59,5 @@ class MedianVoterPositionCalculator():
         diffIK = abs(voteI.position - voteK.position)
         diffIJ = abs(voteI.position - voteJ.position)
         
-        return 2*voteI.power()*((diffIK - diffIJ)/self.__positionMaxDifference)
+        return voteI.power()*((diffIK - diffIJ)/self.__positionMaxDifference)
         

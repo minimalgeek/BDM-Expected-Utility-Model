@@ -5,7 +5,7 @@ Created on 2016 máj. 19
 '''
 
 import csv
-from hu.farago.eum2.dto.Player import Player
+from hu.farago.eum3.GroupDecisionModel import Actor
 from hu import APP_RESOURCES
 
 class PlayerCSVReader():
@@ -27,7 +27,7 @@ class PlayerCSVReader():
         with open(fileName) as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                player = Player(row['name'], row['capability'], row['position'], row['salience'])
+                player = Actor(row['name'], float(row['position']), float(row['capability']), float(row['salience']))
                 players.append(player)
         return players
     
