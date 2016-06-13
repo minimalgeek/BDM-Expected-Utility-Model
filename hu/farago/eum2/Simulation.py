@@ -18,7 +18,13 @@ from plotly.offline import plot
 def handlePlotly(data, i):
     #py.sign_in("neural", "u47280okou")
     dataToPlot = createDataToPlot(data, i)
-    plot(dataToPlot, filename='line-mode')
+    fileName = '-'.join(['simulation', 
+                        str(model.votesIncludeSelf), 
+                        str(model.probabilityOfStatusQuoShouldCalculateWithOne),
+                        str(model.offerMakerUseTheFirstMatrix),
+                        str(model.offerMakerAcceptOffersByMinDistance),
+                        str(model.stabilizedDistance)])
+    plot(dataToPlot, filename=fileName)
 
 def createDataToPlot(data, i):
     xVec = [z for z in range(i)]
@@ -37,7 +43,7 @@ if __name__ == '__main__':
     model.probabilityOfStatusQuoShouldCalculateWithOne = False
     model.offerMakerUseTheFirstMatrix = False
     model.offerMakerAcceptOffersByMinDistance = False
-    model.stabilizedDistance = 0.001
+    model.stabilizedDistance = 0.01
     
     objectListPrint(players)
     print("================ START ================")    

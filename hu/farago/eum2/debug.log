@@ -16,3 +16,23 @@
 [0613/131714:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
 [0613/135520:ERROR:file_io.cc(30)] read: expected 4, observed 0
 [0613/135520:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/140817:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/140817:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/141001:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/141001:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/141043:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/141043:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/141121:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/141121:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/141147:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/141147:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/141217:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/141217:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/141243:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/141243:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/142736:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/142736:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/143104:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/143104:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0613/143149:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0613/143149:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
