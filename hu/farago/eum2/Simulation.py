@@ -34,9 +34,10 @@ if __name__ == '__main__':
     model = Model(players)
     
     model.votesIncludeSelf = False
-    model.probabilityOfStatusQuoShouldCalculateWithOne = True
+    model.probabilityOfStatusQuoShouldCalculateWithOne = False
     model.offerMakerUseTheFirstMatrix = False
-    model.offerMakerAcceptOffersByMinDistance = True
+    model.offerMakerAcceptOffersByMinDistance = False
+    model.stabilizedDistance = 0.001
     
     objectListPrint(players)
     print("================ START ================")    
@@ -65,7 +66,7 @@ if __name__ == '__main__':
         objectListPrint(players)
         
         model.calculateMinMax()
-        if model.posDistance() == 0 or i >= 200:
+        if model.posDistance() <= model.stabilizedDistance or i >= 200:
             shouldRun = False
         i+=1
         print("=========== END OF THE ROUND: %i =============" % i)
