@@ -13,11 +13,12 @@ from hu.farago.eum2.calculator.Helper import objectListPrint
 
 import plotly.plotly as py
 import plotly.graph_objs as go
+from plotly.offline import plot
 
 def handlePlotly(data, i):
-    py.sign_in("neural", "u47280okou")
+    #py.sign_in("neural", "u47280okou")
     dataToPlot = createDataToPlot(data, i)
-    py.iplot(dataToPlot, filename='line-mode')
+    plot(dataToPlot, filename='line-mode')
 
 def createDataToPlot(data, i):
     xVec = [z for z in range(i)]
