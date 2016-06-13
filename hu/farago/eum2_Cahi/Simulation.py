@@ -13,6 +13,7 @@ from hu.farago.eum2_Cahi.calculator.Helper import objectListPrint
 
 import plotly.plotly as py
 import plotly.graph_objs as go
+from plotly.offline import plot
 
 def createDataToPlot(data, i):
     xVec = [z for z in range(i)]
@@ -35,7 +36,7 @@ if __name__ == '__main__':
     data = [{"name":x.name, "values":[x.position]} for x in players]
     
     i = 0
-    for i in range(2):
+    for i in range(10):
         medianVPC.calculateMedianVoterPosition()
         medianVoter = medianVPC.getMedianVoterPosition()
         print("==> Median Voter:", medianVoter, '\n')
@@ -62,10 +63,11 @@ if __name__ == '__main__':
         
         print("=========== END OF THE ROUND: %i =============" % i)
     
-    py.sign_in("neural", "u47280okou")
+    #py.sign_in("neural", "u47280okou")
 
     dataToPlot = createDataToPlot(data, i)
     
     # Plot and embed in ipython notebook!
-    py.iplot(dataToPlot, filename='line-mode')
+    #py.iplot(dataToPlot, filename='line-mode')
+    plot(dataToPlot, filename='line-mode')
     

@@ -22,18 +22,25 @@ class OfferMaker(object):
             playerI.offers = []
             for j, playerJ in enumerate(self.__players):
                 if i != j and playerI.position != playerJ.position:
-                    Ei = self.__expectedCalc.get_expected_utility_ij()[j][i]
-                    Ej = self.__expectedCalc.get_expected_utility_ji()[j][i]
+                    EIi = self.__expectedCalc.get_expected_utility_ij()[j][i]               #az i ilyennek látja saját győzelmének hasznosságát
+                    EIj = self.__expectedCalc.get_expected_utility_ji()[j][i]               #i azt gondolja, hogy ha j győz, akkor ennek j ilyen hasznoságot tulajdonít
 
-                    if Ei > Ej > 0:
-                        #midStep = (playerI.position - playerJ.position)/2                               # nem használjuk
-                        playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, Ei)) # playerI.position - midStep
-                    elif Ei > 0 and Ej < 0 and abs(Ei) > abs(Ej):
-                        #xHat = (playerI.position - playerJ.position)/abs(Ei/Ej)
+                    EJj = self.__expectedCalc.get_expected_utility_ij()[i][j]               #az j ilyennek látja saját győzelmének hasznosságát
+                    EJi = self.__expectedCalc.get_expected_utility_ji()[i][j]               #j azt gondolja, hogy ha i győz, akkor ennek i ilyen hasznoságot tulajdonít
+
+                    if EIi > EIj and EJj > EJi:
+                        if playerI.power() >= playerJ.power():
+                            playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerI.position, EIi))
+                        elif playerI.power() < playerJ.power():
+                            playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, EIi))
+                            
+                    elif EIi > 0 and EIj < 0 and abs(EIi) > abs(EIj) and EJj < 0 and EJi > 0 and abs(EJj) < abs(EJi) :
+    
                         xHat = playerJ.power() * ((playerI.position - playerJ.position)/(playerI.power() + playerJ.power()))
-                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, Ei))
-                    elif Ei > 0 and Ej < 0 and abs(Ei) < abs(Ej):
-                        playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position, Ei))
+                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, EIi))
+                        
+                    elif EIi > 0 and EIj < 0 and abs(EIi) < abs(EIj):
+                        playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position, EIi))
                         
             print("==== Offers for %s ====" % playerI.name)
             objectListPrint(playerI.offers)
