@@ -6,25 +6,19 @@ Created on 2016 máj. 24
 
 from typing import Iterable
 from hu.farago.eum2.dto.Player import Player
+from hu.farago.eum2.dto.Model import Model
 
 class ProbabilityOfStatusQuoCalculator(object):
 
-    __players = []
-    __probabilitOfSuccess = []
-
-    def __init__(self, players:Iterable[Player], probabilitOfSuccess):
-        self.__players = players
-        self.__probabilitOfSuccess = probabilitOfSuccess
+    def __init__(self, model:Model):
+        self.model = model
 
     def calculate(self):
-        length = len(self.__players)
-        probabilityOfStatusQuo = [[0 for x in range(length)] for y in range(length)]
         
-        for i, playerI in enumerate(self.__players):
-            for j, playerJ in enumerate(self.__players):
+        for i, playerI in enumerate(self.model.players):
+            for j, playerJ in enumerate(self.model.players):
                 multiplication = 1.0
-                for k, playerK in enumerate(self.__players):
+                for k, playerK in enumerate(self.model.players):
                     if k != i and k != j:
-                        multiplication *= (self.__probabilitOfSuccess[i][k] + (1 - playerK.salience))
-                probabilityOfStatusQuo[i][j] = multiplication
-        return probabilityOfStatusQuo
+                        multiplication *= (playerI.probabilityOfSuccess[playerK.name] + (1 - playerK.salience))
+                playerI.probabilityOfStatusQuo[playerJ.name] = multiplication

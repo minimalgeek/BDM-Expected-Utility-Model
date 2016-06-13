@@ -8,7 +8,6 @@ class Player():
     '''
     Player of EUM
     '''
-    preferredPosition = None
     previousPosition = None
     
     name = None
@@ -16,19 +15,22 @@ class Player():
     position = None
     salience = None
     
+    risk = None
     sumOfVotes = 0
+    probabilityOfSuccess = {}
+    probabilityOfStatusQuo = {}
+    expectedUtilityI = {}
+    expectedUtilityJ = {}
+    offers = {}
     
-    offers = []
-
     def __init__(self, name, capability, position, salience):
         self.name = name
         self.capability = float(capability)
         self.position = float(position)
         self.previousPosition = float(position)
         self.salience = float(salience)
-        
-        self.preferredPosition = self.position
-        
+        self.risk = 1
+                
     def power(self):
         return self.capability*self.salience
     

@@ -10,74 +10,58 @@ from hu.farago.eum2.calculator.ProbabilityOfSuccessCalculator import Probability
 from hu.farago.eum2.calculator.ProbabilityOfStatusQuoCalculator import ProbabilityOfStatusQuoCalculator
 from hu.farago.eum2.calculator.Utility import *
 from hu.farago.eum2.calculator.Helper import tablePrint
+from hu.farago.eum2.dto.Model import Model
 
 class ExpectedUtilityCalculator():
-
-    __players = []
-    __medianVoter = None
-    __maxDifferenceBetweenPositions = 0
-    __risks = []
-
-    __expectedUtilityIJ = []
-    __expectedUtilityJI = []
     
-    def __init__(self, players:Iterable[Player], medianVoter:Player, maxDifferenceBetweenPositions, risks):
-        self.__players = players
-        self.__medianVoter = medianVoter
-        self.__maxDifferenceBetweenPositions = maxDifferenceBetweenPositions
-        self.__risks = risks
+    def __init__(self, model:Model):
+        self.model = model
 
-    def get_expected_utility_ij(self):
-        return self.__expectedUtilityIJ
-
-    def get_expected_utility_ji(self):
-        return self.__expectedUtilityJI
-
-    def calculateExpectedUtility(self):
-        probSuccCalc = ProbabilityOfSuccessCalculator(self.__players)
-        probabilityOfSuccess = probSuccCalc.calculate()
-        probSQCalc = ProbabilityOfStatusQuoCalculator(self.__players, probabilityOfSuccess)
-        probabilityOfStatusQuo = probSQCalc.calculate()
+    def calculate(self):
+        ProbabilityOfSuccessCalculator(self.model).calculate()
+        ProbabilityOfStatusQuoCalculator(self.model).calculate()
         
-        length = len(self.__players)
-        
-        self.__expectedUtilityIJ = [[0 for x in range(length)] for y in range(length)]
-        self.__expectedUtilityJI = [[0 for x in range(length)] for y in range(length)]
-        
-        for i, playerI in enumerate(self.__players):
-            for j, playerJ in enumerate(self.__players):
-                probSucc = probabilityOfSuccess[i][j]
-                probSQ = 1 #probabilityOfStatusQuo[i][j]
-                
-                usi = USI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
-                ufi = UFI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
-                ubi = UBI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
-                uwi = UWI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
-                usq = USQ(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[i]).calculate()
-                
-                T = 1
-
-                prevDistance = abs(playerI.previousPosition - playerJ.previousPosition)
-                currentDistance = abs(playerI.position - playerJ.position)
-                if prevDistance >= currentDistance:
+        for i, playerI in enumerate(self.model.players):
+            for j, playerJ in enumerate(self.model.players):
+                if (i != j):
+                    probSucc = playerI.probabilityOfSuccess[playerJ.name]
+                    probSQ = playerI.probabilityOfStatusQuo[playerJ.name]
+                    
+                    if self.model.probabilityOfStatusQuoShouldCalculateWithOne:
+                        probSQ = 1
+                    
+                    usi = USI(playerI, playerJ, self.model).calculate()
+                    ufi = UFI(playerI, playerJ, self.model).calculate()
+                    ubi = UBI(playerI, playerJ, self.model).calculate()
+                    uwi = UWI(playerI, playerJ, self.model).calculate()
+                    usq = USQ(playerI, playerJ, self.model).calculate()
+                    
                     T = 1
-                else:
-                    T = 0
-
-                self.__expectedUtilityIJ[i][j] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
-                                        (1 - playerJ.salience)*usi - probSQ*usq - \
-                                        (1 - probSQ)*(T*ubi + (1 - T)*uwi)
-                
-                probSucc = probabilityOfSuccess[j][i]
-                probSQ = 1 #probabilityOfStatusQuo[j][i]
-                
-                usi = USI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                ufi = UFI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                ubi = UBI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                uwi = UWI(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                usq = USQ(self.__medianVoter, playerI, playerJ, self.__maxDifferenceBetweenPositions, self.__risks[j]).calculate()
-                
-                self.__expectedUtilityJI[i][j] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
-                                        (1 - playerJ.salience)*usi - probSQ*usq - \
-                                        (1 - probSQ)*(T*ubi + (1 - T)*uwi)
+    
+                    prevDistance = abs(playerI.previousPosition - playerJ.previousPosition)
+                    currentDistance = abs(playerI.position - playerJ.position)
+                    if prevDistance >= currentDistance:
+                        T = 1
+                    else:
+                        T = 0
+    
+                    playerI.expectedUtilityI[playerJ.name] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
+                                            (1 - playerJ.salience)*usi - probSQ*usq - \
+                                            (1 - probSQ)*(T*ubi + (1 - T)*uwi)
+                    
+                    probSucc = playerJ.probabilityOfSuccess[playerI.name]
+                    probSQ = playerJ.probabilityOfStatusQuo[playerI.name]
+                    
+                    if self.model.probabilityOfStatusQuoShouldCalculateWithOne:
+                        probSQ = 1
+                    
+                    usi = USI(playerJ, playerI, self.model).calculate()
+                    ufi = UFI(playerJ, playerI, self.model).calculate()
+                    ubi = UBI(playerJ, playerI, self.model).calculate()
+                    uwi = UWI(playerJ, playerI, self.model).calculate()
+                    usq = USQ(playerJ, playerI, self.model).calculate()
+                    
+                    playerI.expectedUtilityJ[playerJ.name] = playerJ.salience*(probSucc*usi + (1-probSucc)*ufi) + \
+                                            (1 - playerJ.salience)*usi - probSQ*usq - \
+                                            (1 - probSQ)*(T*ubi + (1 - T)*uwi)
                 

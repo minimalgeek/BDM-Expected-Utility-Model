@@ -3,51 +3,59 @@ Created on 2016 máj. 25
 
 @author: Balázs
 '''
+
 from collections import defaultdict
+from hu.farago.eum2.dto.Model import Model
 from hu.farago.eum2.calculator.Helper import objectListPrint
 
 class OfferMaker(object):
-
-    __players = None
-    __expectedCalc = None
     
-    def __init__(self, players, expectedCalc):
-        self.__players = players
-        self.__expectedCalc = expectedCalc
-        
+    def __init__(self, model:Model):
+        self.model = model
+
     def makeOffers(self):
         
-        for i, playerI in enumerate(self.__players):
-            # calculate where i get offers from
-            playerI.offers = []
-            for j, playerJ in enumerate(self.__players):
-                if i != j and playerI.position != playerJ.position:
-                    Ei = self.__expectedCalc.get_expected_utility_ij()[j][i]
-                    Ej = self.__expectedCalc.get_expected_utility_ji()[j][i]
-
-                    if Ei > Ej > 0:
-                        midStep = (playerI.position - playerJ.position)/2
-                        playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, Ei)) # playerI.position - midStep
-                    elif Ei > 0 and Ej < 0 and abs(Ei) > abs(Ej):
-                        xHat = (playerI.position - playerJ.position)/abs(Ei/Ej)
-                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, Ei))
-                    elif Ei > 0 and Ej < 0 and abs(Ei) < abs(Ej):
-                        playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position, Ei))
+        for playerI in self.model.players:
+            playerI.offers = {}
+            for playerJ in self.model.players:
+                if playerI.position != playerJ.position:
+                    if self.model.offerMakerUseTheFirstMatrix:
+                        Ei = playerJ.expectedUtilityI[playerI.name]
+                        Ej = playerI.expectedUtilityJ[playerJ.name]
+    
+                        if Ei > Ej > 0:
+                            playerI.offers[playerJ.name] = Offer(playerJ, Offer.CONFRONTATION, playerJ.position, Ei)
+                        elif Ei > 0 and Ej < 0 and abs(Ei) > abs(Ej):
+                            xHat = (playerI.position - playerJ.position)/abs(Ei/Ej)
+                            playerI.offers[playerJ.name] = Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, Ei)
+                        elif Ei > 0 and Ej < 0 and abs(Ei) < abs(Ej):
+                            playerI.offers[playerJ.name] = Offer(playerJ, Offer.CAPITULATION, playerJ.position, Ei)
+                    else:
+                        Ei = playerJ.expectedUtilityI[playerI.name]
+                        Ej = playerJ.expectedUtilityJ[playerI.name]
+    
+                        if Ei > Ej > 0:
+                            playerI.offers[playerJ.name] = Offer(playerJ, Offer.CONFRONTATION, playerJ.position, Ei)
+                        elif Ei > 0 and Ej < 0 and abs(Ei) > abs(Ej):
+                            xHat = (playerI.position - playerJ.position)/abs(Ei/Ej)
+                            playerI.offers[playerJ.name] = Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, Ei)
+                        elif Ei > 0 and Ej < 0 and abs(Ei) < abs(Ej):
+                            playerI.offers[playerJ.name] = Offer(playerJ, Offer.CAPITULATION, playerJ.position, Ei)
                         
             print("==== Offers for %s ====" % playerI.name)
-            objectListPrint(playerI.offers)
+            objectListPrint(playerI.offers.values())
         
-        for player in self.__players:
+        for player in self.model.players:
             if len(player.offers) > 0:
-                
-                max_util = max([offer.eu for offer in player.offers])
-                max_offers = [offer for offer in player.offers if offer.eu == max_util]
-                offer = min(max_offers, key=lambda x: abs(player.position - x.offered_position))
-                
-                #bestOfferFunc = lambda offer : abs(offer.offered_position - player.position)
-                #bestOffer = min(player.offers, key = bestOfferFunc)
-                
-                player.updatePosition(offer.offered_position)
+                if self.model.offerMakerAcceptOffersByMinDistance:
+                    offer = min(player.offers.values(), key=lambda x: abs(player.position - x.offered_position))
+                    player.updatePosition(offer.offered_position)
+                else:
+                    max_util = max([offer.eu for offer in player.offers.values()])
+                    max_offers = [offer for offer in player.offers.values() if offer.eu == max_util]
+                    offer = min(max_offers, key=lambda x: abs(player.position - x.offered_position))
+                    
+                    player.updatePosition(offer.offered_position)
                 
 class Offer(object):
     CONFRONTATION = 'confrontation'

@@ -4,35 +4,26 @@ Created on 2016 máj. 26
 @author: Balázs
 '''
 
+from hu.farago.eum2.dto.Player import Player
+from hu.farago.eum2.dto.Model import Model
+
 class RiskCalculator(object):
     
-    __players = None
-    __expectedUtility = None
-
-    def __init__(self, players, expectedUtility):
-        self.__players = players
-        self.__expectedUtility = expectedUtility
+    def __init__(self, model:Model):
+        self.model = model
     
     def calculate(self):
-        
-        sums = []
-        
-        length = len(self.__expectedUtility)
-        for i in range(length):
+        for playerI in self.model.players:
             euSum = 0
-            for j in range(length):
-                if j != i:
-                    euSum += self.__expectedUtility[i][j]
-            
-            sums.append(euSum)
+            for playerJ in self.model.players:
+                if playerI != playerJ:
+                    euSum += playerI.expectedUtilityI[playerJ.name]
+            playerI.risk = euSum # playerI.risk is used temporarily to store the sum value
         
-        maxSum = max(sums)
-        minSum = min(sums)
+        maxSum = max(self.model.players, key = lambda x : x.risk).risk
+        minSum = min(self.model.players, key = lambda x : x.risk).risk
         
-        riskVector = []
-        for i in range(length):
-            Ri = (2 * sums[i] - maxSum - minSum)/(maxSum - minSum)
+        for playerI in self.model.players:
+            Ri = (2 * playerI.risk - maxSum - minSum)/(maxSum - minSum)
             ri = (1 - Ri/3)/(1 + Ri/3)
-            riskVector.append(ri)
-            
-        return riskVector
+            playerI.risk = ri
