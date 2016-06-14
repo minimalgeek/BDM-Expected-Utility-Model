@@ -1,5 +1,6 @@
 http://flask.pocoo.org/docs/0.11/installation/
 
+venv\scripts\activate
 set FLASK_DEBUG=1
+set FLASK_APP=Main.py
 python -m flask run
-
