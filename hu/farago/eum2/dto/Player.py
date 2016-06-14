@@ -17,14 +17,6 @@ class Player():
     position = None
     salience = None
     
-    risk = None
-    sumOfVotes = 0
-    probabilityOfSuccess = None
-    probabilityOfStatusQuo = None
-    expectedUtilityI = None
-    expectedUtilityJ = None
-    offers = None
-    
     def __init__(self, name, capability, position, salience):
         self.name = name
         self.capability = float(capability)

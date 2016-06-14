@@ -48,3 +48,5 @@
 [0614/112251:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
 [0614/112312:ERROR:file_io.cc(30)] read: expected 4, observed 0
 [0614/112312:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)
+[0614/131004:ERROR:file_io.cc(30)] read: expected 4, observed 0
+[0614/131004:ERROR:crash_report_database_win.cc(549)] CreateDirectory : A rendszer nem találja a megadott elérési utat. (0x3)

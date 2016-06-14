@@ -96,5 +96,5 @@ if __name__ == '__main__':
         i+=1
         print("=========== END OF THE ROUND: %i =============" % i)
         
-    #handlePlotly(data, i)
+    handlePlotly(data, i)
     
