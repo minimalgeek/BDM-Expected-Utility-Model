@@ -12,6 +12,7 @@ class Model(object):
     probabilityOfStatusQuoShouldCalculateWithOne = True
     offerMakerUseTheFirstMatrix = False
     offerMakerAcceptOffersByMinDistance = False
+    printMatrices = True
     stabilizedDistance = 0.001
 
     players = []

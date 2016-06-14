@@ -9,7 +9,7 @@ from hu.farago.eum2.calculator.MedianVoterPositionCalculator import MedianVoterP
 from hu.farago.eum2.calculator.ExpectedUtilityCalculator import ExpectedUtilityCalculator
 from hu.farago.eum2.calculator.OfferMaker import OfferMaker
 from hu.farago.eum2.calculator.RiskCalculator import RiskCalculator
-from hu.farago.eum2.calculator.Helper import objectListPrint
+from hu.farago.eum2.calculator.Helper import *
 
 import plotly.plotly as py
 import plotly.graph_objs as go
@@ -34,15 +34,31 @@ def createDataToPlot(data, i):
     
     return dataToPlot
 
+def printMatrices(model):
+    if model.printMatrices:
+        print("===== Median Voter =====")
+        print(model.medianVoter)
+        print("===== Risks =====")
+        [dumpclean(player.risk) for player in model.players]
+        print("===== Probability Of Success =====")
+        [dumpclean(player.probabilityOfSuccess) for player in model.players]
+        print("===== Probability Of Status Quo =====")
+        [dumpclean(player.probabilityOfStatusQuo) for player in model.players]
+        print("===== Ei =====")
+        [dumpclean(player.expectedUtilityI) for player in model.players]
+        print("===== Ej =====")
+        [dumpclean(player.expectedUtilityJ) for player in model.players]
+
 if __name__ == '__main__':
     
     players = PlayerCSVReader().readDefaultPlayers()
     model = Model(players)
     
     model.votesIncludeSelf = False
-    model.probabilityOfStatusQuoShouldCalculateWithOne = False
+    model.probabilityOfStatusQuoShouldCalculateWithOne = True
     model.offerMakerUseTheFirstMatrix = False
     model.offerMakerAcceptOffersByMinDistance = False
+    model.printMatrices = True
     model.stabilizedDistance = 0.01
     
     objectListPrint(players)
@@ -63,13 +79,16 @@ if __name__ == '__main__':
         medianVPC.calculate()
         expectedCalc.calculate()
         riskCalc.calculate()
+        
+        printMatrices(model)
+        
         offerMaker.makeOffers()
+        print('===== Players at the end of the round =====')
+        objectListPrint(players)
         
         for idx, p in enumerate(model.players):
             first_or_default = next((x for x in data if x["name"] == p.name), None)
             first_or_default["values"].append(p.position)
-        
-        objectListPrint(players)
         
         model.calculateMinMax()
         if model.posDistance() <= model.stabilizedDistance or i >= 200:
@@ -77,5 +96,5 @@ if __name__ == '__main__':
         i+=1
         print("=========== END OF THE ROUND: %i =============" % i)
         
-    handlePlotly(data, i)
+    #handlePlotly(data, i)
     
