@@ -1,6 +1,11 @@
 name,capability,position,salience
-A,0.8,4,0.6
-B,0.85,4,0.6
-C,0.13,10,0.81
-D,0.16,10,0.82
-E,0.19,10,0.83
+Netherlands,0.08,4,0.80
+Belgium,0.08,7,0.40
+Luxembourg,0.03,4,0.20
+Germany,0.16,4,0.80
+France,0.16,10,0.60
+Italy,0.16,10,0.60
+UK,0.16,10,0.40
+Ireland,0.05,7,0.10
+Denmark,0.05,4,1.00
+Greece,0.08,7,0.70

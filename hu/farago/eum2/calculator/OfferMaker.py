@@ -21,7 +21,7 @@ class OfferMaker(object):
                 if playerI.position != playerJ.position:
                     if self.model.offerMakerUseTheFirstMatrix:
                         Ei = playerJ.expectedUtilityI[playerI.name]
-                        Ej = playerI.expectedUtilityJ[playerJ.name]
+                        Ej = playerI.expectedUtilityI[playerJ.name]
     
                         if Ei > Ej > 0:
                             playerI.offers[playerJ.name] = Offer(playerJ, Offer.CONFRONTATION, playerJ.position, Ei)

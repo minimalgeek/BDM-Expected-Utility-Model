@@ -10,6 +10,7 @@ from hu.farago.eum2.calculator.ExpectedUtilityCalculator import ExpectedUtilityC
 from hu.farago.eum2.calculator.OfferMaker import OfferMaker
 from hu.farago.eum2.calculator.RiskCalculator import RiskCalculator
 from hu.farago.eum2.calculator.Helper import *
+from hu import APP_RESOURCES
 
 import plotly.plotly as py
 import plotly.graph_objs as go
@@ -51,13 +52,13 @@ def printMatrices(model):
 
 if __name__ == '__main__':
     
-    players = PlayerCSVReader().readDefaultPlayers()
+    players = PlayerCSVReader().readPlayers(APP_RESOURCES + "countries_test.csv")
     model = Model(players)
     
     model.votesIncludeSelf = False
     model.probabilityOfStatusQuoShouldCalculateWithOne = True
     model.offerMakerUseTheFirstMatrix = False
-    model.offerMakerAcceptOffersByMinDistance = False
+    model.offerMakerAcceptOffersByMinDistance = True
     model.printMatrices = True
     model.stabilizedDistance = 0.01
     
@@ -73,7 +74,16 @@ if __name__ == '__main__':
     
     shouldRun = True
     i = 0
+
+
+    # round_0:
+
     model.calculateMinMax()
+
+    medianVPC.calculate()
+    expectedCalc.calculate()
+    riskCalc.calculate()
+
     while shouldRun:
         
         medianVPC.calculate()
