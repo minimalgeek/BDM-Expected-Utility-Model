@@ -37,7 +37,7 @@ class OfferMaker(object):
                     elif EIi > 0 and EIj < 0 and abs(EIi) > abs(EIj) and EJj < 0 and EJi > 0 and abs(EJj) < abs(EJi) :
     
                         xHat = playerJ.power() * ((playerI.position - playerJ.position)/(playerI.power() + playerJ.power()))
-                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, EIi))
+                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHat, EIi))           #player I kap offereket
                         
                     elif EIi > 0 and EIj < 0 and abs(EIi) < abs(EIj):
                         playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position, EIi))
@@ -50,7 +50,9 @@ class OfferMaker(object):
                 
                 max_util = max([offer.eu for offer in player.offers])
                 max_offers = [offer for offer in player.offers if offer.eu == max_util]
-                offer = min(max_offers, key=lambda x: abs(player.position - x.offered_position))
+                #offer = min(max_offers, key=lambda x: abs(player.position - x.offered_position))
+
+                offer = min(player.offers, key=lambda x: abs(player.position - x.offered_position))
                 
                 #bestOfferFunc = lambda offer : abs(offer.offered_position - player.position)
                 #bestOffer = min(player.offers, key = bestOfferFunc)

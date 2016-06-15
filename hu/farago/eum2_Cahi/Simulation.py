@@ -1,7 +1,7 @@
 '''
-Created on 2016 máj. 19
+Created on 2016 június
 
-@author: Balázs
+@author: Balázs + Gábor
 
 '''
 from hu.farago.eum2_Cahi.reader.PlayerCSVReader import PlayerCSVReader
@@ -10,6 +10,7 @@ from hu.farago.eum2_Cahi.calculator.ExpectedUtilityCalculator import ExpectedUti
 from hu.farago.eum2_Cahi.calculator.OfferMaker import OfferMaker
 from hu.farago.eum2_Cahi.calculator.RiskCalculator import RiskCalculator
 from hu.farago.eum2_Cahi.calculator.Helper import objectListPrint
+from hu import APP_RESOURCES
 
 import plotly.plotly as py
 import plotly.graph_objs as go
@@ -25,7 +26,7 @@ def createDataToPlot(data, i):
 
 if __name__ == '__main__':
     
-    players = PlayerCSVReader().readDefaultPlayers()
+    players = PlayerCSVReader().readPlayers(APP_RESOURCES + "countries_test.csv")
     objectListPrint(players)
     
     print("================ START ================")    
