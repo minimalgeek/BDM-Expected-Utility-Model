@@ -28,7 +28,8 @@ def createDataToPlot(data, i):
 if __name__ == '__main__':
     
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "countries_test.csv")
-    players = PlayerCSVReader().readPlayers(APP_RESOURCES + "WW1.csv")
+    #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "WW1.csv")
+    players = PlayerCSVReader().readPlayers(APP_RESOURCES + "Litigation Case Study.csv")
     objectListPrint(players)
     
     print("================ START ================")    

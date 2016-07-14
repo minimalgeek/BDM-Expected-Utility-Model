@@ -26,6 +26,7 @@ class Player():
         self.position = float(position)
         self.previousPosition = float(position)
         self.salience = float(salience)
+        self.bestOffer = None
         
         self.preferredPosition = self.position
         

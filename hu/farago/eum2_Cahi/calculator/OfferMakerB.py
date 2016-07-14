@@ -71,12 +71,14 @@ class OfferMaker(object):
 
                         if playerI.power() >= playerJ.power():                              # ha I erősebb, akkor az ő pozíciója változatlan marad
                             playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerI.position, EIi))           #playerI.offer = offer, amit player I kap, és amit player J-től kap
+                            playerJ.offers.append(Offer(playerI, Offer.CONFRONTATION, playerI.position, EIi)) 
 
                             self.__offersIJ[i][j] = playerI.position
                             
                         elif playerI.power() < playerJ.power():                             # ha I gyengébbnek bizonyul, átveszi J pozícióját
                             playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, EIi))
-
+                            playerJ.offers.append(Offer(playerI, Offer.CONFRONTATION, playerJ.position, EIi))
+                            
                             self.__offersIJ[i][j] = playerJ.position
 
 
@@ -93,29 +95,11 @@ class OfferMaker(object):
                         self.__deltaIJ[i][j] = (playerI.position - playerJ.position) * (abs(EIi) / (abs(EIi) + abs(EJj)))               # !! probálkozás az xHat matrix létrehozásársa
 
                             
-                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #player I kap kiegyezésre ajánlatot..
-
-                        playerJ.offers.append(Offer(playerI, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #...ami player j-t, a kompromisszumos ajánlattevőt is köti
+                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #player I kap kiegyezésre ajánlatot...
+                        playerJ.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #...ami player j-t, a kompromisszumos ajánlattevőt is köti
 
                         self.__offersIJ[i][j] = playerI.position - xHatI
                         self.__offersIJ[j][i] = playerI.position - xHatI
-
-                    elif EIi > 0 and EIj < 0 and abs(EIi) > abs(EIj)      and EJj < 0 and EJi > 0 and abs(EJj) > abs(EJi) :
-    
-                        #xHat = playerJ.power() * ((playerI.position - playerJ.position)/(playerI.power() + playerJ.power()))           #szabi előtti változat
-
-                        #if playerI.position > playerJ.position:
-                        xHatI = (playerI.position - playerJ.position) * (abs(EIi) / (abs(EIi) + abs(EJj)))
-                        #xHatJ = (playerI.position - playerJ.position) * (abs(EJj) / (abs(EIi) + abs(EJj)))
-                        self.__deltaIJ[i][j] = (playerI.position - playerJ.position) * (abs(EIi) / (abs(EIi) + abs(EJj)))               # !! probálkozás az xHat matrix létrehozásársa
-
-                            
-                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #player I kap kiegyezésre ajánlatot..
-
-                        playerJ.offers.append(Offer(playerI, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #...ami player j-t, a kompromisszumos ajánlattevőt is köti
-
-                        self.__offersIJ[i][j] = playerI.position - xHatI
-                        self.__offersIJ[j][i] = playerI.position - xHatI    
                         
                     elif EIi > 0 and EIj < 0 and abs(EIi) < abs(EIj):                                                   #player I kapitulál  
                         playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position, EIi))
@@ -123,7 +107,9 @@ class OfferMaker(object):
 
 
                     elif EIi > EIj  and EIi > 0 and EIj > 0     and EJj < EJi and EJj > 0:                                                                     # Ha I azt gondolja, hogy ő az erősebb, J pedig azt, hogy ő a gyengébb:
-                        playerI.offers.append(Offer(playerJ, Offer.CONFRONT, playerJ.position, EIi))           # player J offert kap I-től I pozicióját vegye át
+                        playerI.offers.append(Offer(playerJ, Offer.CONFRONT, playerJ.position, EIi))
+                        playerJ.offers.append(Offer(playerI, Offer.CONFRONT, playerJ.position, EIi))  # player J offert kap I-től I pozicióját vegye át
+
                         self.__offersIJ[i][j] = playerJ.position
 
                     #elif EIi < EIj and EJj > EJi and EIi > 0 and EIj < 0 and EJj > 0 and EJi > 0:                                                                     # Ha I azt gondolja, hogy ő az erősebb, J pedig azt, hogy ő a gyengébb:
@@ -148,9 +134,16 @@ class OfferMaker(object):
                 #offer = min(max_offers, key=lambda x: abs(player.position - x.offered_position))
 
                 offer = min(player.offers, key=lambda x: abs(player.position - x.offered_position))
+
                 
                 #bestOfferFunc = lambda offer : abs(offer.offered_position - player.position)
                 #bestOffer = min(player.offers, key = bestOfferFunc)
                 
-                player.updatePosition(offer.offered_position)
+                player.bestOffer = offer
                 
+        for playerI in self.__players:
+            if playerI.bestOffer : 
+                for playerJ in self.__players:
+                    if (playerI.bestOffer.other_actor == playerJ and playerJ.bestOffer != None and playerJ.bestOffer.other_actor == playerI) :
+                        playerI.updatePosition(playerI.bestOffer.offered_position)
+                        break                
