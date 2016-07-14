@@ -14,10 +14,18 @@ class ProbabilityOfSuccessCalculator(object):
 
     def __init__(self, players:Iterable[Player]):
         self.__players = players
-
+        
+        def playerPos(p):
+            return p.position
+        
+        min_position = min(self.__players, key=playerPos).position
+        max_position = max(self.__players, key=playerPos).position
+        self.posDiff = max_position - min_position
+        
     def calculate(self):
         length = len(self.__players)
         probabilityOfSuccess = [[0 for x in range(length)] for y in range(length)]
+
         
         for i, playerI in enumerate(self.__players):
             for j, playerJ in enumerate(self.__players):
@@ -27,6 +35,7 @@ class ProbabilityOfSuccessCalculator(object):
                 for k, playerK in enumerate(self.__players):
                     if k != i and k != j:
                         arg = self.calculateAllianceProbabilityArg(playerI, playerJ, playerK)
+
                         if (arg > 0):
                             numerator += arg
                         denominator += abs(arg)
@@ -41,7 +50,10 @@ class ProbabilityOfSuccessCalculator(object):
         tablePrint(probabilityOfSuccess)
 
         return probabilityOfSuccess
-                                    
-    def calculateAllianceProbabilityArg(self, voteI: Player, voteJ: Player, voteK: Player):
-        return voteK.power()*(abs(voteK.position - voteJ.position) - abs(voteK.position - voteI.position))
-    
+
+    # Balázs-féle számolási mód                                
+    #def calculateAllianceProbabilityArg(self, voteI: Player, voteJ: Player, voteK: Player):
+    #    return voteK.power()*(abs(voteK.position - voteJ.position) - abs(voteK.position - voteI.position))
+
+    def calculateAllianceProbabilityArg(self, voteI: Player, voteJ: Player, voteK: Player):    
+        return 2*voteK.power()*((abs(voteK.position - voteJ.position) - abs(voteK.position - voteI.position))/self.posDiff)

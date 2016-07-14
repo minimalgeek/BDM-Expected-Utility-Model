@@ -8,6 +8,7 @@ from hu.farago.eum2_Cahi.reader.PlayerCSVReader import PlayerCSVReader
 from hu.farago.eum2_Cahi.calculator.MedianVoterPositionCalculator import MedianVoterPositionCalculator
 from hu.farago.eum2_Cahi.calculator.ExpectedUtilityCalculator import ExpectedUtilityCalculator
 from hu.farago.eum2_Cahi.calculator.OfferMaker import OfferMaker
+#from hu.farago.eum2_Cahi.calculator.OfferMaker3 import OfferMaker
 from hu.farago.eum2_Cahi.calculator.RiskCalculator import RiskCalculator
 from hu.farago.eum2_Cahi.calculator.Helper import objectListPrint
 from hu import APP_RESOURCES
@@ -38,7 +39,7 @@ if __name__ == '__main__':
     data = [{"name":x.name, "values":[x.position]} for x in players]
     
     i = 0
-    for i in range(3):                              #RANGE!!!
+    for i in range(10):                              #RANGE!!!
         medianVPC.calculateMedianVoterPosition()
         medianVoter = medianVPC.getMedianVoterPosition()
         print("==> Median Voter:", medianVoter, '\n')
@@ -59,7 +60,7 @@ if __name__ == '__main__':
             offerMaker.makeOffers()
         
             for idx, p in enumerate(players):
-                print(p.name," old: ",round(p.previousPosition,3)," ==> new positions:", round(p.position,3), '\n')
+                print(p.name," old: ",round(p.previousPosition,4)," ==> new positions:", round(p.position,4), '\n')
                 first_or_default = next((x for x in data if x["name"] == p.name), None)
                 first_or_default["values"].append(p.position)
         

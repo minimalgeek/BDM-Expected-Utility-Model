@@ -7,32 +7,6 @@ from collections import defaultdict
 from hu.farago.eum2_Cahi.calculator.Helper import objectListPrint
 from hu.farago.eum2_Cahi.calculator.Helper import tablePrint
 
-class Offer(object):
-    CONFRONTATION = 'confrontation'
-    CONFRONT = 'confrontation+'
-    COMPROMISE = 'compromise'
-    CAPITULATION = 'capitulation'
-    OFFER_TYPES = (
-        CONFRONTATION,
-        CONFRONT,
-        COMPROMISE,
-        CAPITULATION,
-    )
-
-    def __init__(self, other_actor, offer_type, offered_position, eu):
-        if offer_type not in self.OFFER_TYPES:
-            raise ValueError('offer_type "%s" not in %s'
-                             % (offer_type, self.OFFER_TYPES))
-
-        self.other_actor = other_actor  # actor proposing the offer
-        self.offer_type = offer_type
-        self.offered_position = offered_position
-        self.eu = eu
-        
-    def __str__(self):
-        return ','.join([self.other_actor.name, self.offer_type, str(round(self.offered_position, 3))])
-
-
 class OfferMaker(object):
 
     __players = None
@@ -66,57 +40,54 @@ class OfferMaker(object):
                     EJi = self.__expectedCalc.get_expected_utility_ji()[i][j]               #j azt gondolja, hogy ha i győz, akkor ennek i ilyen hasznoságot tulajdonít
 
 
-                    if EIi > EIj and EIi > 0 and EIj > 0       and EJj > EJi  and EJj > 0 and EJi > 0:                                             # Ha mind a két fél azt gondolja, hogy ő az erősebb, akkor confrontáció lesz:
-                    #if EIi > EIj and EIi > 0 and EJj > EJi and EJj > 0 :   
+                    # 1.) CONFLICT                                                          # Ha mind a két fél azt gondolja, hogy ő az erősebb, akkor confrontáció lesz:
+                    if EIi > EIj and EIi > 0 and EJj > EJi and EJj > 0:   
 
                         if playerI.power() >= playerJ.power():                              # ha I erősebb, akkor az ő pozíciója változatlan marad
-                            playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerI.position, EIi))           #playerI.offer = offer, amit player I kap, és amit player J-től kap
-
+                            playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerI.position, EIi))
                             self.__offersIJ[i][j] = playerI.position
                             
                         elif playerI.power() < playerJ.power():                             # ha I gyengébbnek bizonyul, átveszi J pozícióját
                             playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, EIi))
-
                             self.__offersIJ[i][j] = playerJ.position
 
-
-
-
-                            
-                    elif EIi > 0 and EIj < 0 and abs(EIi) > abs(EIj)      and EJj < 0 and EJi > 0 and abs(EJj) < abs(EJi) :
+                    # 2.) COMPROMISE+        
+                    elif EIi > EIj and EIi > 0 and EJj < EJi and EJj > 0:
     
-                        #xHat = playerJ.power() * ((playerI.position - playerJ.position)/(playerI.power() + playerJ.power()))           #szabi előtti változat
-
-                        #if playerI.position > playerJ.position:
                         xHatI = (playerI.position - playerJ.position) * (abs(EIi) / (abs(EIi) + abs(EJj)))
-                        #xHatJ = (playerI.position - playerJ.position) * (abs(EJj) / (abs(EIi) + abs(EJj)))
-                        self.__deltaIJ[i][j] = (playerI.position - playerJ.position) * (abs(EIi) / (abs(EIi) + abs(EJj)))               # !! probálkozás az xHat matrix létrehozásársa
-
-                            
+                           
                         playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #player I kap kiegyezésre ajánlatot...
                         playerJ.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #...ami player j-t, a kompromisszumos ajánlattevőt is köti
 
                         self.__offersIJ[i][j] = playerI.position - xHatI
                         self.__offersIJ[j][i] = playerI.position - xHatI
-                        
-                    elif EIi > 0 and EIj < 0 and abs(EIi) < abs(EIj):                                                   #player I kapitulál  
-                        playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position, EIi))
+
+                    # 3.) CAPITULATE+   
+                    elif EIi > EIj and EIi > 0 and EJj < 0:                                                  #player I kapitulációra kényszeríti J-t 
+                        playerJ.offers.append(Offer(playerI, Offer.CAPITULATION, playerI.position, EIi))
                         self.__offersIJ[i][j] = playerJ.position                       
 
+                    # 4.) COMPROMISE-
+                    elif EIi < EIj and EIi > 0 and EJj > EJi and EJj > 0:                                                                    # Ha I azt gondolja, hogy ő az erősebb, J pedig azt, hogy ő a gyengébb:
 
-                    elif EIi > EIj  and EIi > 0 and EIj > 0     and EJj < EJi and EJj > 0:                                                                     # Ha I azt gondolja, hogy ő az erősebb, J pedig azt, hogy ő a gyengébb:
-                        playerI.offers.append(Offer(playerJ, Offer.CONFRONT, playerJ.position, EIi))           # player J offert kap I-től I pozicióját vegye át
-                        self.__offersIJ[i][j] = playerJ.position
+                        xHatI = (playerI.position - playerJ.position) * (abs(EIi) / (abs(EIi) + abs(EJj)))
+            
+                        playerI.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #player I kap kiegyezésre ajánlatot...
+                        playerJ.offers.append(Offer(playerJ, Offer.COMPROMISE, playerI.position - xHatI, EIi))           #...ami player j-t, a kompromisszumos ajánlattevőt is köti
 
-                    #elif EIi < EIj and EJj > EJi and EIi > 0 and EIj < 0 and EJj > 0 and EJi > 0:                                                                     # Ha I azt gondolja, hogy ő az erősebb, J pedig azt, hogy ő a gyengébb:
-                    #    playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, EIi))           # player J offert kap I-től I pozicióját vegye át
-                    #    self.__offersIJ[i][j] = playerJ.position                           
+                        self.__offersIJ[i][j] = playerI.position - xHatI
+                        self.__offersIJ[j][i] = playerI.position - xHatI
+
+                    # 7.) CAPITULATE-   
+                    elif EIi < 0 and EJj > EJi and EJj > 0:                                                  #player J kapitulációra kényszeríti I-t 
+                        playerI.offers.append(Offer(playerJ, Offer.CAPITULATION, playerJ.position, EIi))
+                        self.__offersIJ[i][j] = playerJ.position 
+                         
                         
             print("==== Offers for %s ====" % playerI.name)
             objectListPrint(playerI.offers)
 
-        #print("==== xHat ====")                                                         # !! probálkozás az xHat matrix létrehozásársa
-        #tablePrint(self.__deltaIJ)
+
 
         print("==== offers ====")                                                         # offer mátrix nyomtatási célból
         tablePrint(self.__offersIJ)
@@ -136,3 +107,27 @@ class OfferMaker(object):
                 
                 player.updatePosition(offer.offered_position)
                 
+class Offer(object):
+    CONFRONTATION = 'confrontation'
+    CONFRONT = 'confrontation+'
+    COMPROMISE = 'compromise'
+    CAPITULATION = 'capitulation'
+    OFFER_TYPES = (
+        CONFRONTATION,
+        CONFRONT,
+        COMPROMISE,
+        CAPITULATION,
+    )
+
+    def __init__(self, other_actor, offer_type, offered_position, eu):
+        if offer_type not in self.OFFER_TYPES:
+            raise ValueError('offer_type "%s" not in %s'
+                             % (offer_type, self.OFFER_TYPES))
+
+        self.other_actor = other_actor  # actor proposing the offer
+        self.offer_type = offer_type
+        self.offered_position = offered_position
+        self.eu = eu
+        
+    def __str__(self):
+        return ','.join([self.other_actor.name, self.offer_type, str(round(self.offered_position, 3))])
