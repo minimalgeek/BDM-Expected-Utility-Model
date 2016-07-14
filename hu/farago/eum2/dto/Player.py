@@ -31,6 +31,8 @@ class Player():
         self.expectedUtilityI = collections.OrderedDict()
         self.expectedUtilityJ = collections.OrderedDict()
         self.offers = collections.OrderedDict()
+        
+        self.bestOffer = None;
                 
     def power(self):
         return self.capability*self.salience
