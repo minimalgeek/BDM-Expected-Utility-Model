@@ -49,14 +49,21 @@ class OfferMaker(object):
             if len(player.offers) > 0:
                 if self.model.offerMakerAcceptOffersByMinDistance:
                     offer = min(player.offers.values(), key=lambda x: abs(player.position - x.offered_position))
-                    player.updatePosition(offer.offered_position)
+                    # player.updatePosition(offer.offered_position)
+                    player.bestOffer = offer
                 else:
                     max_util = max([offer.eu for offer in player.offers.values()])
                     max_offers = [offer for offer in player.offers.values() if offer.eu == max_util]
                     offer = min(max_offers, key=lambda x: abs(player.position - x.offered_position))
+                    player.bestOffer = offer
+        
+        for playerI in self.model.players:
+            if playerI.bestOffer : 
+                for playerJ in self.model.players:
+                    if (playerI.bestOffer.other_actor == playerJ and playerJ.bestOffer != None and playerJ.bestOffer.other_actor == playerI) :
+                        playerI.updatePosition(playerI.bestOffer.offered_position)
+                        break
                     
-                    player.updatePosition(offer.offered_position)
-                
 class Offer(object):
     CONFRONTATION = 'confrontation'
     COMPROMISE = 'compromise'
