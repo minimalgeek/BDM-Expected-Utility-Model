@@ -16,6 +16,7 @@ from hu import APP_RESOURCES
 import plotly.plotly as py
 import plotly.graph_objs as go
 from plotly.offline import plot
+from hu.farago.eum2_Cahi.calculator.WeightedPositionCalculator import WeightedPositionCalculator
 
 def createDataToPlot(data, i):
     xVec = [z for z in range(i)]
@@ -24,6 +25,8 @@ def createDataToPlot(data, i):
         dataToPlot.append(go.Scatter(x=xVec, y=dataItem["values"], mode='lines', name=dataItem["name"]))
     
     return dataToPlot
+
+WEIGHTED_SUM = "Weighted sum"
 
 if __name__ == '__main__':
     
@@ -34,10 +37,12 @@ if __name__ == '__main__':
     
     print("================ START ================")    
     medianVPC = MedianVoterPositionCalculator(players)
+    wpc = WeightedPositionCalculator(players)
     
     risks = [1 for x in range(len(players))]
     
     data = [{"name":x.name, "values":[x.position]} for x in players]
+    data.append({"name" : WEIGHTED_SUM, "values": [wpc.calculate()]})
     
     i = 0
     for i in range(10):                              #RANGE!!!
@@ -64,6 +69,9 @@ if __name__ == '__main__':
                 print(p.name," old: ",round(p.previousPosition,4)," ==> new positions:", round(p.position,4), '\n')
                 first_or_default = next((x for x in data if x["name"] == p.name), None)
                 first_or_default["values"].append(p.position)
+        
+        weightedSum = next((x for x in data if x["name"] == WEIGHTED_SUM), None)
+        weightedSum["values"].append(wpc.calculate())
         
         print("=========== END OF THE ROUND: %i =============" % i)
     
