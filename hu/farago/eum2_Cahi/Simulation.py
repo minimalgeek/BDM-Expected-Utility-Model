@@ -35,6 +35,7 @@ if __name__ == '__main__':
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "WW1_mod.csv")
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "Litigation Case Study_orig.csv")
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "Litigation Case Study.csv")
+    #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "Litigation Case Study 2.csv")
     objectListPrint(players)
     
     print("================ START ================")    
