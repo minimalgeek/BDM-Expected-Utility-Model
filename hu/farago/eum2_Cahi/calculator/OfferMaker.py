@@ -5,7 +5,7 @@ Created on 2016 máj. 25
 '''
 from collections import defaultdict
 from hu.farago.eum2_Cahi.calculator.Helper import objectListPrint
-from hu.farago.eum2_Cahi.calculator.Helper import tablePrint
+from hu.farago.eum2_Cahi.calculator.Helper import *
 
 class Offer(object):
     CONFRONTATION = 'confrontation'
@@ -129,7 +129,8 @@ class OfferMaker(object):
                     #elif EIi < EIj and EJj > EJi and EIi > 0 and EIj < 0 and EJj > 0 and EJi > 0:                                                                     # Ha I azt gondolja, hogy ő az erősebb, J pedig azt, hogy ő a gyengébb:
                     #    playerI.offers.append(Offer(playerJ, Offer.CONFRONTATION, playerJ.position, EIi))           # player J offert kap I-től I pozicióját vegye át
                     #    self.__offersIJ[i][j] = playerJ.position                           
-                        
+
+        for i, playerI in enumerate(self.__players):                        
             print("==== Offers for %s ====" % playerI.name)
             objectListPrint(playerI.offers)
 
@@ -137,7 +138,11 @@ class OfferMaker(object):
         #tablePrint(self.__deltaIJ)
 
         print("==== offers ====")                                                         # offer mátrix nyomtatási célból
-        tablePrint(self.__offersIJ)
+        print('   ', end = ' ')
+        for i, playerI in enumerate(self.__players):
+            print('%-8s' % playerI.name, end = ' ')
+        print('\n')
+        tablePrint2(self.__offersIJ, self.__players)
         
         for player in self.__players:
             if len(player.offers) > 0:
