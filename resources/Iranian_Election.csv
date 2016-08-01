@@ -1,0 +1,9 @@
+name,capability,position,salience
+JAL,0.24,1,0.7
+HAD,0.08,2,1
+GHA,0.01,4,1
+REZ,0.2,4,0.6
+BAF,0.64,5,1
+VEL,0.07,5,0.25
+RUH,0.21,8,1
+ARE,0.3,10,0.7

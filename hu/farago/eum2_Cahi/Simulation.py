@@ -8,7 +8,10 @@ from hu.farago.eum2_Cahi.reader.PlayerCSVReader import PlayerCSVReader
 from hu.farago.eum2_Cahi.calculator.MedianVoterPositionCalculator import MedianVoterPositionCalculator
 from hu.farago.eum2_Cahi.calculator.ExpectedUtilityCalculator import ExpectedUtilityCalculator
 from hu.farago.eum2_Cahi.calculator.OfferMaker import OfferMaker
+#from hu.farago.eum2_Cahi.calculator.OfferMaker1 import OfferMaker
+#from hu.farago.eum2_Cahi.calculator.OfferMaker2 import OfferMaker
 #from hu.farago.eum2_Cahi.calculator.OfferMaker3 import OfferMaker
+#from hu.farago.eum2_Cahi.calculator.OfferMakerB import OfferMaker
 from hu.farago.eum2_Cahi.calculator.RiskCalculator import RiskCalculator
 from hu.farago.eum2_Cahi.calculator.Helper import objectListPrint
 from hu import APP_RESOURCES
@@ -31,11 +34,13 @@ WEIGHTED_SUM = "Weighted sum"
 if __name__ == '__main__':
     
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "countries_test.csv")
-    players = PlayerCSVReader().readPlayers(APP_RESOURCES + "WW1.csv")
+    #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "WW1.csv")
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "WW1_mod.csv")
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "Litigation Case Study_orig.csv")
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "Litigation Case Study.csv")
     #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "Litigation Case Study 2.csv")
+    players = PlayerCSVReader().readPlayers(APP_RESOURCES + "OIL_PREANA.csv")
+    #players = PlayerCSVReader().readPlayers(APP_RESOURCES + "Iranian_Election.csv")
     objectListPrint(players)
     
     print("================ START ================")    
@@ -48,7 +53,7 @@ if __name__ == '__main__':
     data.append({"name" : WEIGHTED_SUM, "values": [wpc.calculate()]})
     
     i = 0
-    for i in range(10):                              #RANGE!!!
+    for i in range(20):                              #RANGE!!!
         medianVPC.calculateMedianVoterPosition()
         medianVoter = medianVPC.getMedianVoterPosition()
         print("==> Median Voter:", medianVoter, '\n')
